@@ -1,8 +1,16 @@
-const reqs: any[] = [];
+import { Blocker } from "@/lib/blocker";
+import { AD_DOMAINS } from "@/lib/helpers";
+
 const ports: chrome.runtime.Port[] = [];
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
+
+  (async () => {
+    for (const domain of AD_DOMAINS) {
+      await blocker.block(domain);
+    }
+  })();
 });
 
 chrome.runtime.onConnect.addListener((port: any) => {
@@ -17,6 +25,7 @@ chrome.runtime.onConnect.addListener((port: any) => {
   }
 });
 
+const blocker = new Blocker();
 chrome.webRequest.onBeforeRequest.addListener(
   (details) => {
     const payload = {
@@ -24,6 +33,7 @@ chrome.webRequest.onBeforeRequest.addListener(
       method: details.method,
       type: details.type,
       tabId: details.tabId,
+      initiator: details.initiator,
       timeStamp: details.timeStamp,
     };
 
@@ -31,13 +41,11 @@ chrome.webRequest.onBeforeRequest.addListener(
       port.postMessage(payload);
     }
 
-    reqs.push({
-      url: details.url,
-      method: details.method,
-      type: details.type,
-      tabId: details.tabId,
-      timeStamp: details.timeStamp,
-    });
+    const classified = blocker.classify(details);
+
+    (async () => {
+      if (classified.isAd) await blocker.block(classified.domain);
+    })();
 
     return undefined;
   },

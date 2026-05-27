@@ -9,7 +9,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Ban } from "lucide-react";
+import { Ban, RefreshCcw } from "lucide-react";
+import { Blocker } from "@/lib/blocker";
 
 const SidePanel = () => {
   const [reqs, setReqs] = useState<any[]>([]);
@@ -99,6 +100,14 @@ const SidePanel = () => {
         <div className="flex items-center justify-between">
           <MethodSelect />
           <TypeSelect />
+          <Button
+            onClick={async () => {
+              const blocker = new Blocker();
+              blocker.reset();
+            }}
+          >
+            <RefreshCcw />
+          </Button>
           <Button onClick={() => setReqs([])}>
             <Ban />
           </Button>

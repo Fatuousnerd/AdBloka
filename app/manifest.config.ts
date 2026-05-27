@@ -9,7 +9,15 @@ export default defineManifest({
   action: { default_popup: "index.html" },
   side_panel: { default_path: "sidepanel.html" },
 
-  permissions: ["storage", "activeTab", "webRequest", "tabs", "sidePanel"],
+  permissions: [
+    "storage",
+    "activeTab",
+    "webRequest",
+    "tabs",
+    "sidePanel",
+    "declarativeNetRequest",
+    "declarativeNetRequest",
+  ],
 
   host_permissions: ["<all_urls>"],
 

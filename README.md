@@ -37,6 +37,8 @@ This extension is completely free with no premium features, no data collection, 
 6. The extension is now active
 
 ### Alternatively, you can clone it in your device, build and then load it
+> You need to have `git` installed in order to clone the repo locally.
+Then have at least one of the following pakcge managers; `npm`, `bun`, `yarn` or `pnpm`.
 
 ```bash
 git clone https://github.com/Fatuousnerd/AdBloka

@@ -8,7 +8,6 @@ export const AD_DOMAINS = [
   "pagead2.googlesyndication.com",
   "stats.g.doubleclick.net",
   "youtubeads.googleapis.com",
-  "googlevideo.com",
 
   // -- YAHOO --
   "ads.yahoo.com",

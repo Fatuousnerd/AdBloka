@@ -64,9 +64,15 @@ export class Blocker implements BlockerType {
     console.log("[BLOCKING]", `||${domain}^`);
   }
 
-  async reset() {
+  async getBlocked() {
+    const existing = await chrome.declarativeNetRequest.getDynamicRules();
+    console.log("Rules: ", existing);
+    return existing;
+  }
+
+  async unblock(id: number) {
     await chrome.declarativeNetRequest.updateDynamicRules({
-      removeRuleIds: [1, 2, 3, 4],
+      removeRuleIds: [id],
     });
     return await chrome.declarativeNetRequest.getDynamicRules();
   }

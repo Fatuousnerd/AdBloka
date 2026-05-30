@@ -1,142 +1,52 @@
-import { useEffect, useState } from "react";
-import { Badge } from "./ui/badge";
+import { Blocker } from "@/lib/blocker";
 import { ItemDescription, ItemTitle } from "./ui/item";
 import { Button } from "./ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { Ban, RefreshCcw } from "lucide-react";
-import { Blocker } from "@/lib/blocker";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { useEffect, useState } from "react";
+import { Ban } from "lucide-react";
 
 const SidePanel = () => {
-  const [reqs, setReqs] = useState<any[]>([]);
-  const [method, setMethod] = useState<string>("all");
-  const [type, setType] = useState<string>("all");
-  //   const ex = [
-  //     {
-  //       method: "GET",
-  //       tabId: "123",
-  //       timeStamp: "123",
-  //       type: "css",
-  //       url: "http://url.com",
-  //     },
-  //   ];
-
-  const MethodSelect = () => {
-    return (
-      <>
-        <Select
-          defaultValue="all"
-          value={method}
-          onValueChange={(val) => setMethod(val)}
-        >
-          <SelectTrigger className="uppercase">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {["all", "get", "post", "headers"].map((method) => (
-              <SelectItem key={method} value={method} className="uppercase">
-                {method}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </>
-    );
-  };
-
-  const TypeSelect = () => {
-    return (
-      <>
-        <Select
-          defaultValue="all"
-          value={type}
-          onValueChange={(val) => setType(val)}
-        >
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {[
-              "all",
-              "stylesheet",
-              "xmlhttprequest",
-              "media",
-              "image",
-              "websocket",
-            ].map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </>
-    );
-  };
+  const [rules, setRules] = useState<chrome.declarativeNetRequest.Rule[]>([]);
 
   useEffect(() => {
-    const port = chrome.runtime.connect({ name: "reqmon" });
-
-    port.onMessage.addListener((msg: any) => {
-      setReqs((prev) => [msg, ...prev]);
-    });
-
-    return () => {
-      port.disconnect();
-    };
+    const blocker = new Blocker();
+    (async () => {
+      setRules(await blocker.getBlocked());
+    })();
   }, []);
 
   return (
     <>
-      <div className="flex flex-col items-stretch gap-5 px-2 w-full h-screen no-scrollbar bg-background">
-        <ItemTitle className="sticky top-0 font-extrabold text-2xl">
-          Requests
+      <div className="w-full h-full flex flex-col items-stretch gap-4 p-2">
+        <ItemTitle className="font-bold text-2xl">
+          AdBloka: OSS Free Ad-Blocker
         </ItemTitle>
-        <div className="flex items-center justify-between">
-          <MethodSelect />
-          <TypeSelect />
-          <Button
-            onClick={async () => {
-              const blocker = new Blocker();
-              blocker.reset();
-            }}
-          >
-            <RefreshCcw />
-          </Button>
-          <Button onClick={() => setReqs([])}>
-            <Ban />
-          </Button>
-        </div>
-        <div className="overflow-y-scroll h-full no-scrollbar flex flex-col items-stretch gap-2">
-          {reqs
-            .filter((req) => {
-              const methodMatch =
-                method === "all" || req.method === method.toUpperCase();
-              const typeMatch = type === "all" || req.type === type;
-              req.method === method.toUpperCase();
-
-              return methodMatch && typeMatch;
-            })
-            .map((req, i) => (
-              <div key={i} className="grid grid-cols-8 gap-5">
-                <Badge className="rounded-sm!">{req.method}</Badge>
-                <Badge className="rounded-sm! col-span-2">{req.type}</Badge>
-                <ItemDescription className="col-span-3 text-nowrap overflow-x-scroll no-scrollbar">
-                  <a href={req.url} target="_blank">
-                    {req.url}
-                  </a>
+        <Card className="p-0">
+          <CardHeader className="p-0 items-start">
+            <CardTitle className="font-semibold">Blocked Domains</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {rules.map((rule) => (
+              <div key={rule.id} className="grid grid-cols-10 gap-4 bg-blue500">
+                <ItemDescription>{rules.indexOf(rule) + 1}</ItemDescription>
+                <ItemDescription className="col-span-6 text-primary font-semibold text-nowrap overflow-x-scroll no-scrollbar">
+                  {rule.condition.urlFilter}
                 </ItemDescription>
-                <Badge className="rounded-sm!">
-                  {new Date(req.timeStamp).toLocaleTimeString()}
-                </Badge>
+                <Button
+                  variant={"destructive"}
+                  className="col-span-3"
+                  onClick={async () => {
+                    const blocker = new Blocker();
+                    blocker.unblock(rule.id);
+                    setRules(await blocker.getBlocked());
+                  }}
+                >
+                  <Ban /> Unblock
+                </Button>
               </div>
             ))}
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </>
   );

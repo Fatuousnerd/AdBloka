@@ -1,0 +1,1 @@
+bunx --bun shadcn@latest init --preset b1McDbpDc2 --template vite --rtl --pointer

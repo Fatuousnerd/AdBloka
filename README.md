@@ -29,8 +29,9 @@ This extension is completely free with no premium features, no data collection, 
 - Open source
 
 ## INSTALLATION
-1. Download the latest release from GitHub
-2. Open Chrome and go to chrome://extensions/
+1. Download the latest release from GitHub(adbloka.zip file)
+2. Extract the zip folder
+2. Open Chrome and go to `chrome://extensions/`
 3. Enable Developer mode (top right corner)
 4. Click Load unpacked
 5. Select the extracted extension folder
@@ -38,7 +39,7 @@ This extension is completely free with no premium features, no data collection, 
 
 ### Alternatively, you can clone it in your device, build and then load it
 > You need to have `git` installed in order to clone the repo locally.
-Then have at least one of the following pakcge managers; `npm`, `bun`, `yarn` or `pnpm`.
+Then have at least one of the following package managers; `npm`, `bun`, `yarn` or `pnpm`.
 
 ```bash
 git clone https://github.com/Fatuousnerd/AdBloka
@@ -59,6 +60,7 @@ Then load the dist folder as an unpacked extension.
 
 ## HOW TO USE
 After installation, the extension works automatically.
+You can view the currently blocked domains, and even choose to unblock them.
 
 ## PRIVACY
 - No user data is collected

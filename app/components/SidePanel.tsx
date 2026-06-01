@@ -30,7 +30,7 @@ const SidePanel = () => {
               <div key={rule.id} className="grid grid-cols-10 gap-4 bg-blue500">
                 <ItemDescription>{rules.indexOf(rule) + 1}</ItemDescription>
                 <ItemDescription className="col-span-6 text-primary font-semibold text-nowrap overflow-x-scroll no-scrollbar">
-                  {rule.condition.urlFilter}
+                  {rule.condition.urlFilter!.split("||")[1].split("^")[0]}
                 </ItemDescription>
                 <Button
                   variant={"destructive"}

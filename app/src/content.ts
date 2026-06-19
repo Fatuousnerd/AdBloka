@@ -1,1 +1,1 @@
-console.log('Injected')
+console.log('AdBloka Active')
